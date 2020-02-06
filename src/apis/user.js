@@ -14,6 +14,14 @@ export function signUp(params) {
   return request({
     url: '/signUp',
     params: params,
-    methods: 'GET'
+    method: 'GET'
+  })
+}
+
+// 获取用户信息
+export function getUserInfo() {
+  return request({
+    url: '/getUserInfo',
+    method: 'POST'
   })
 }

@@ -2,13 +2,15 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Layout from '../layout'
+// import detailRoutes from './modules/detail'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '',
     component: Layout,
+    redirect: '',
     children: [
       {
         path: '/',
@@ -18,12 +20,18 @@ const routes = [
     ]
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '/article/:id',
+    component: Layout,
+    children: [
+      {
+        path: 'detail',
+        name: 'Detail',
+        component: () => import('@/views/detail/index.vue'),
+        meta: {
+          title: '文章详情'
+        }
+      }
+    ]
   }
 ]
 

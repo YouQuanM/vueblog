@@ -3,7 +3,7 @@ import { getToken } from './cookie'
 
 // 创建 axios 请求实例
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_URL,
+  baseURL: 'http://127.0.0.1:7001/api',
   timeout: 5000 // 请求超时时间
 })
 
@@ -11,7 +11,9 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // 修改config的操作在requestConfig方法之前
-    config.headers['Authorization'] = getToken()
+    if (getToken()) {
+      config.headers['Authorization'] = 'Bearer ' + getToken()
+    }
     return config
   },
   err => {
