@@ -1,6 +1,6 @@
 <template>
   <div class="layout-header-logo">
-    LOGO
+    <img class="liangzhi-logo" src="@/assets/lzlogo.png" alt="logo">
   </div>
 </template>
 
@@ -11,5 +11,8 @@ export default {
 </script>
 
 <style>
-
+.liangzhi-logo {
+  width: 120px;
+  height: 40px;
+}
 </style>

@@ -2,7 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Layout from '../layout'
-// import detailRoutes from './modules/detail'
+import articleRoutes from './modules/article'
+import writeRoutes from './modules/write'
 
 Vue.use(VueRouter)
 
@@ -19,20 +20,8 @@ const routes = [
       }
     ]
   },
-  {
-    path: '/article/:id',
-    component: Layout,
-    children: [
-      {
-        path: 'detail',
-        name: 'Detail',
-        component: () => import('@/views/detail/index.vue'),
-        meta: {
-          title: '文章详情'
-        }
-      }
-    ]
-  }
+  ...articleRoutes,
+  ...writeRoutes
 ]
 
 const router = new VueRouter({

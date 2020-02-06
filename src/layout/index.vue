@@ -43,6 +43,7 @@ export default {
     .layout-content {
       width: 100%;
       border-right: 1px solid #dcdfe6;
+      margin: 12px;
     }
     .layout-sider {
       width: 300px;
