@@ -35,8 +35,9 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import * as userApis from '@/apis/user'
-import { getToken, setToken } from '@/common/cookie'
+import { getToken, setToken, removeToken } from '@/common/cookie'
 export default {
   data() {
     return {
@@ -60,12 +61,27 @@ export default {
       circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
     }
   },
+  computed: {
+    ...mapGetters([
+      'loginFlag'
+    ]),
+  },
+  watch: {
+    loginFlag(val) {
+      if (val) {
+        this.loginDialogFlag = val
+      }
+    }
+  },
   created() {
     if(getToken()){
-      console.log('获取了token====>', getToken())
       // 通过token获取用户信息接口
       userApis.getUserInfo().then(res => {
-        this.user = res
+        if (res?.success) {
+          this.user = res
+        } else {
+          removeToken()
+        }
       })
     }
   },

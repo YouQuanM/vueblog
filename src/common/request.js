@@ -3,6 +3,7 @@ import { getToken } from './cookie'
 
 // 创建 axios 请求实例
 const service = axios.create({
+  // baseURL: process.env.VUE_APP_BASE_URL,
   baseURL: 'http://127.0.0.1:7001/api',
   timeout: 5000 // 请求超时时间
 })
