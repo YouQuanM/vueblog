@@ -30,34 +30,60 @@
         <span class="detail-time">{{article.time}}</span>
       </section>
     </div>
+    <div class="liangzhi-comment-area">
+      <div class="comment-header">
+        <div class="add-comment-btn">
+          <el-button type="success" plain icon="el-icon-edit" @click="addComment">添加评论</el-button>
+        </div>
+        <add-comment ref="addComment"></add-comment>
+      </div>
+      <div class="comment-list">
+        <p v-if="commentList.length === 0">暂无评论，快来抢沙发</p>
+        <template v-for="(item, index) in commentList">
+          <comment-item :item="item" :key="index"></comment-item>
+        </template>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import moment from 'moment'
 import * as detailApis from '@/apis/article'
+import * as commentApis from '@/apis/comment'
+import AddComment from './addcomment'
+import CommentItem from './comment'
+
 export default {
+  components: { AddComment, CommentItem },
   data () {
     return {
+      // 文章
       article: {
         title: '',
         content: '',
         labels: [],
         time: ''
       },
+      // 作者
       author: {
         name: '',
         avatar: '',
         introduction: '',
         identity: ''
       },
-      circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
+      circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
+      // 评论
+      addCommentFlag: false,
+      commentList: []
     }
   },
   created() {
     this.getDetail(this.$route.params.id)
+    this.getComment(this.$route.params.id)
   },
   methods: {
+    // 获取文章详情
     async getDetail(id) {
       const { data } = await detailApis.articleDetail({id: id})
       this.article = {
@@ -68,6 +94,24 @@ export default {
         time: moment(data.article.createdAt).format('MMMM DD YYYY, hh:mm:ss')
       }
       this.author = data.user
+    },
+    // 获取评论列表
+    async getComment(id) {
+      const { data } = await commentApis.commentList({id: id})
+      this.commentList= data
+    },
+    // 添加评论
+    addComment() {
+      commentApis.addComment({
+        articleId: this.$route.params.id,
+        content: this.$refs.addComment.content,
+        show: true
+      }).then(res => {
+        if (res.success) {
+          this.$message('评论成功')
+          this.getComment(this.$route.params.id)
+        }
+      })
     }
   }
 }
@@ -121,6 +165,14 @@ export default {
         span {
           margin: 0 3px;
         }
+      }
+    }
+  }
+  .liangzhi-comment-area {
+    margin: 20px 0 0 0;
+    .comment-header {
+      .add-comment-btn {
+        margin: 10px 0;
       }
     }
   }

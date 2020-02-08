@@ -6,29 +6,28 @@
     </div>
     <!-- 登录情况 -->
     <div class="user-operation" v-else>
-      <el-dropdown>
+      <el-dropdown @command="handleDropdown">
         <span class="el-dropdown-link">
-          <el-avatar size="medium" :src="circleUrl"></el-avatar>
+          <el-avatar size="medium" :src="user.avatar || circleUrl"></el-avatar>
         </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>个人中心</el-dropdown-item>
-          <el-dropdown-item>退出登录</el-dropdown-item>
+          <el-dropdown-item command="main">个人中心</el-dropdown-item>
+          <el-dropdown-item command="logout">退出登录</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
     <!-- 登录弹窗 -->
-    <el-dialog title="登录" :visible.sync="loginDialogFlag">
-      <el-form :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left" label-width="100px">
-        <el-form-item label="username" prop="username">
-          <el-input v-model="loginForm.username" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="password" prop="password">
-          <el-input v-model="loginForm.password" autocomplete="off" show-password></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="closeLoginDialog">取 消</el-button>
-        <el-button type="primary" @click="login">确 定</el-button>
+    <el-dialog :visible.sync="loginDialogFlag">
+      <login-component ref="loginComponent" v-if="signLoginFlag"></login-component>
+      <signup-component ref="signupComponent" v-else></signup-component>
+      <div slot="footer" class="dialog-footer user-login-dialog-footer">
+        <div class="user-signup-btn">
+          <el-button type="text" @click="switchLoginSignup">{{loginSignupTitle}}</el-button>
+        </div>
+        <div class="user-login-btn">
+          <el-button @click="closeLoginDialog">取 消</el-button>
+          <el-button type="primary" @click="submit">确 定</el-button>
+        </div>
       </div>
     </el-dialog>
   </div>
@@ -38,24 +37,16 @@
 import { mapGetters } from 'vuex'
 import * as userApis from '@/apis/user'
 import { getToken, setToken, removeToken } from '@/common/cookie'
+import LoginComponent from './components/login'
+import SignupComponent from './components/signup'
 export default {
+  components: { LoginComponent, SignupComponent },
   data() {
     return {
       // 登录data
       loginDialogFlag: false,
-      loginForm: {
-        username: '',
-        password: ''
-      },
-      loginRules: {
-        username: [
-          { required: true, message: '请输入用户名', trigger: 'blur' }
-        ],
-        password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 8, message: '长度不小于8位', trigger: 'blur' }
-        ]
-      },
+      signLoginFlag: 'login',
+      loginSignupTitle: '未注册?',
       // 用户data
       user: null,
       circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
@@ -86,22 +77,25 @@ export default {
     }
   },
   methods: {
-    login() {
-      this.$refs['loginForm'].validate((valid) => {
-        if (valid) {
-          userApis.login({
-            name: this.loginForm.username,
-            password: this.loginForm.password
-          }).then(res => {
-            this.user = res.userInfo
-            setToken(res.token)
-            this.closeLoginDialog()
+    submit() {
+      if (this.signLoginFlag) {
+        this.$refs.loginComponent.login().then(res => {
+          this.user = res.userInfo
+          setToken(res.token)
+          this.closeLoginDialog()
+        })
+      } else {
+        this.$refs.signupComponent.signUp().then(res => {
+          this.switchLoginSignup()
+          this.$nextTick(() => {
+            this.$refs.loginComponent.loginForm.username = res.name
           })
-        } else {
-          console.log('error submit!!');
-          return false;
-        }
-      });
+        })
+      }
+    },
+    switchLoginSignup() {
+      this.signLoginFlag = !this.signLoginFlag
+      this.loginSignupTitle = this.signLoginFlag ? '未注册?' : '去登陆'
     },
     closeLoginDialog() {
       this.loginDialogFlag = false
@@ -109,11 +103,25 @@ export default {
         username: '',
         password: ''
       }
+    },
+    handleDropdown(command) {
+      if (command === 'logout') {
+        this.logout()
+      } else {
+
+      }
+    },
+    logout() {
+      this.user = null
+      removeToken()
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-
+.user-login-dialog-footer {
+  display: flex;
+  justify-content: space-between;
+}
 </style>

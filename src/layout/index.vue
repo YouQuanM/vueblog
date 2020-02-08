@@ -39,7 +39,6 @@ export default {
   }
   .layout-main {
     display: flex;
-    height: 800px;
     .layout-content {
       width: 100%;
       border-right: 1px solid #dcdfe6;
