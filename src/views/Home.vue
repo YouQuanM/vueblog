@@ -1,20 +1,29 @@
 <template>
   <div class="home">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <el-button type="success" icon="el-icon-edit" circle @click="toWrite"></el-button>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
+import { getToken } from '@/common/cookie'
 export default {
-  name: 'home',
-  components: {
-    HelloWorld
-  },
-  created() {
-    console.log(this.$router)
+  methods: {
+    toWrite() {
+      if (!getToken()) {
+        // 请先登录
+        this.$alert('请先登录', '未登录', {
+          confirmButtonText: '确定',
+          type: 'warning',
+          callback: action => {
+            this.$store.dispatch('user/toLogin', true)
+          }
+        })
+        return
+      }
+      this.$router.push({
+        path: 'write'
+      })
+    }
   }
 }
 </script>
