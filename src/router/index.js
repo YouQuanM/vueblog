@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Index from '../views/index/index.vue'
 import Layout from '../layout'
 import articleRoutes from './modules/article'
 import writeRoutes from './modules/write'
@@ -15,8 +15,8 @@ const routes = [
     children: [
       {
         path: '/',
-        name: 'home',
-        component: Home
+        name: 'Index',
+        component: Index
       }
     ]
   },

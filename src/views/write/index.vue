@@ -65,6 +65,7 @@ export default {
           this.$store.dispatch('user/toLogin', true)
         }
       })
+      return
     }
     const {data} = await articleApis.getArticleTypesLabels()
     this.typeOptions = data.types
