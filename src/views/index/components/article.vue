@@ -34,7 +34,7 @@ export default {
 
 <style lang="less">
 .index-article-content {
-  max-height: 100px;
+  max-height: 80px;
   overflow: hidden;
 }
 </style>
