@@ -19,9 +19,10 @@
           </div>
         </div>
       </section>
-      <section class="detail-content">
-        <!-- <p class="article-content">{{article.content}}</p> -->
-        <div v-html="article.content"></div>
+      <section class="detail-content ql-snow">
+        <div class="ql-editor">
+          <div v-html="article.content"></div>
+        </div>
       </section>
       <section class="detail-footer">
         <div class="detail-labels">
