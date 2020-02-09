@@ -35,3 +35,12 @@ export function getArticleTypesLabels() {
     method: 'GET'
   })
 }
+
+// 文章列表
+export function articleList(params) {
+  return request({
+    url: '/articleList',
+    method: 'GET',
+    params: params
+  })
+}
