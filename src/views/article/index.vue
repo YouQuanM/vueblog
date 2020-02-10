@@ -4,6 +4,7 @@
       <section class="detail-header">
         <div class="detail-title">
           <span>{{article.title}}</span>
+          <el-button @click="toModifyPage" v-if="canModify">修改文章</el-button>
         </div>
         <div class="detail-author-type">
           <div class="detail-author">
@@ -54,6 +55,7 @@ import * as detailApis from '@/apis/article'
 import * as commentApis from '@/apis/comment'
 import AddComment from './addcomment'
 import CommentItem from './comment'
+import { getUserInfo } from '@/common/cookie'
 
 export default {
   components: { AddComment, CommentItem },
@@ -76,7 +78,8 @@ export default {
       circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
       // 评论
       addCommentFlag: false,
-      commentList: []
+      commentList: [],
+      canModify: false
     }
   },
   created() {
@@ -92,9 +95,10 @@ export default {
         content: data.article.content,
         labels: data.article.labelsLabel,
         type: data.article.typeLabel,
-        time: moment(data.article.createdAt).format('MMMM DD YYYY, hh:mm:ss')
+        time: moment(data.article.createdAt).format('MMMM DD YYYY, HH:mm:ss')
       }
       this.author = data.user
+      this.canModify = JSON.parse(getUserInfo()).id === data.article.userId
     },
     // 获取评论列表
     async getComment(id) {
@@ -113,6 +117,11 @@ export default {
           this.getComment(this.$route.params.id)
         }
       })
+    },
+    toModifyPage() {
+      this.$router.push({
+        path: '/write/' + this.$route.params.id
+      })
     }
   }
 }
@@ -126,8 +135,13 @@ export default {
       padding: 0 0 20px 0;
       border-bottom: 1px dashed #ccc;
       .detail-title {
-        font-size: 40px;
-        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        > span {
+          font-size: 40px;
+          font-weight: 600;
+        }
+        
       }
       .detail-author-type {
         display: flex;

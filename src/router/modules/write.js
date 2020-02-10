@@ -12,6 +12,14 @@ const routes = [
         meta: {
           title: '写文章'
         }
+      },
+      {
+        path: ':id',
+        name: 'ModifyArticle',
+        component: () => import('@/views/write/index.vue'),
+        meta: {
+          title: '修改文章'
+        }
       }
     ]
   }

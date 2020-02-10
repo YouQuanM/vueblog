@@ -44,3 +44,12 @@ export function articleList(params) {
     params: params
   })
 }
+
+// 修改文章
+export function modifyArticle(data) {
+  return request({
+    url: '/modifyArticle',
+    method: 'POST',
+    data: data
+  })
+}

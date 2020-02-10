@@ -1,7 +1,7 @@
 <template>
   <div class="liangzhi-write-page">
     <div class="write-title">
-      <el-input placeholder="请输入内容" v-model="title">
+      <el-input placeholder="请输入内容" v-model="title" :disabled="modifyFlag">
         <template slot="prepend">标题: </template>
       </el-input>
     </div>
@@ -9,30 +9,40 @@
       <write-editor ref="editor"></write-editor>
     </div>
     <div class="write-operation">
-      <el-select
-        v-model="type"
-        collapse-tags
-        placeholder="请选择类别">
-        <el-option
-          v-for="item in typeOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
-      <el-select
-        v-model="labels"
-        multiple
-        collapse-tags
-        placeholder="请选择标签">
-        <el-option
-          v-for="item in labelOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
-      <el-button type="success" round @click="submit">发布</el-button>
+      <div class="operation-choose-area">
+        <!-- 类别选择 -->
+        <el-select
+          v-model="type"
+          collapse-tags
+          :disabled="modifyFlag"
+          placeholder="请选择类别">
+          <el-option
+            v-for="item in typeOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+        <!-- 标签选择 -->
+        <el-select
+          v-model="labels"
+          multiple
+          collapse-tags
+          placeholder="请选择标签">
+          <el-option
+            v-for="item in labelOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+        <!-- 匿名选择 -->
+        <el-switch
+          v-model="showAuthor"
+          active-text="匿名">
+        </el-switch>
+      </div>
+      <el-button type="success" round @click="modifyFlag ? modifyArticle() : submit()">{{submitText}}</el-button>
     </div>
   </div>
 </template>
@@ -47,12 +57,16 @@ export default {
   },
   data() {
     return {
+      modifyFlag: false,
       title: '',
       labels: [],
       content: '',
       type: '',
+      author: null,
+      showAuthor: false,
       typeOptions: [],
-      labelOptions: []
+      labelOptions: [],
+      submitText: '发布'
     }
   },
   async created () {
@@ -70,6 +84,12 @@ export default {
     const {data} = await articleApis.getArticleTypesLabels()
     this.typeOptions = data.types
     this.labelOptions = data.labels
+    // 修改
+    if (this.$route.params.id) {
+      this.modifyFlag = true
+      this.submitText = '修改'
+      this.getModifyDetail(this.$route.params.id)
+    }
   },
   methods: {
     submit() {
@@ -89,7 +109,11 @@ export default {
         // 标签value
         labelsValue: this.labels,
         // 标签label
-        labelsLabel: this.getLabelsLabel(this.labels)
+        labelsLabel: this.getLabelsLabel(this.labels),
+        // 匿名
+        showAuthor: !this.showAuthor,
+        // 删除默认为false
+        delete: false
       }).then(res => {
         // 跳转详情
         if (res.success) {
@@ -105,22 +129,57 @@ export default {
         labelsArr.push(this.labelOptions.find(value => value.value === v).label)
       })
       return labelsArr
+    },
+    async getModifyDetail(id) {
+      const { data } = await articleApis.articleDetail({id: id})
+      this.title = data.article.title
+      this.type = data.article.typeValue
+      this.labels = data.article.labelsValue
+      this.showAuthor = !data.article.showAuthor
+      this.$refs.editor.content = data.article.content
+      this.author = {
+        id: data.article.userId,
+        name: data.user.name
+      }
+    },
+    modifyArticle() {
+      this.content = this.$refs.editor.content
+      articleApis.modifyArticle({
+        articleId: this.$route.params.id,
+        userId: this.author.id,
+        content: this.content,
+        labelsValue: this.labels,
+        labelsLabel: this.getLabelsLabel(this.labels),
+        showAuthor: !this.showAuthor
+      }).then(res => {
+        // 跳转详情
+        if (res.success) {
+          this.$router.replace({
+            path: '/article/' + this.$route.params.id + '/detail'
+          })
+        }
+      })
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-.write-title {
-  margin: 10px 0;
-}
-.write-content {
-  margin: 10px 0;
-}
-.write-operation {
-  margin: 10px 0;
-  * {
-    margin: 0 5px 0 0;
+.liangzhi-write-page {
+  padding: 12px;
+  .write-title {
+    margin: 10px 0;
+  }
+  .write-content {
+    margin: 10px 0;
+  }
+  .write-operation {
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    * {
+      margin: 0 5px 0 0;
+    }
   }
 }
 </style>

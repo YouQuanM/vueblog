@@ -36,7 +36,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import * as userApis from '@/apis/user'
-import { getToken, setToken, removeToken } from '@/common/cookie'
+import { getToken, setToken, removeToken, setUserInfo, removeUserInfo } from '@/common/cookie'
 import LoginComponent from './components/login'
 import SignupComponent from './components/signup'
 export default {
@@ -69,9 +69,11 @@ export default {
       // 通过token获取用户信息接口
       userApis.getUserInfo().then(res => {
         if (res?.success) {
-          this.user = res
+          this.user = res.userInfo
+          setUserInfo(res.userInfo)
         } else {
           removeToken()
+          removeUserInfo()
         }
       })
     }
@@ -82,6 +84,7 @@ export default {
         this.$refs.loginComponent.login().then(res => {
           this.user = res.userInfo
           setToken(res.token)
+          setUserInfo(res.userInfo)
           this.closeLoginDialog()
         })
       } else {
@@ -114,6 +117,7 @@ export default {
     logout() {
       this.user = null
       removeToken()
+      removeUserInfo()
     }
   }
 }
