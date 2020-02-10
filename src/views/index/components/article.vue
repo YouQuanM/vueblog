@@ -36,5 +36,8 @@ export default {
 .index-article-content {
   max-height: 80px;
   overflow: hidden;
+  img {
+    width: 100% !important;
+  }
 }
 </style>

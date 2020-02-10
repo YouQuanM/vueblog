@@ -105,7 +105,7 @@ export default {
         // 类型value
         typeValue: this.type,
         // 类型label
-        typeLabel: this.typeOptions.find(v => v.value === this.type).label,
+        typeLabel: this.typeOptions.find(v => v.value === this.type)?.label,
         // 标签value
         labelsValue: this.labels,
         // 标签label

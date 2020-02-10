@@ -1,13 +1,13 @@
 <template>
   <!-- 外层layout -->
-  <div class="liangzhi-layout">
+  <div class="liangzhi-layout" ref="layout">
     <!-- header -->
     <section class="layout-header">
       <layout-header></layout-header>
     </section>
     <div class="layout-main">
       <!-- 内容 -->
-      <section class="layout-content">
+      <section class="layout-content" :style="styleObj">
         <layout-content></layout-content>
       </section>
       <!-- 侧边 -->
@@ -23,10 +23,23 @@ import LayoutHeader from './header/index'
 import LayoutContent from './content/index'
 import LayoutSider from './sider/index'
 export default {
+  data() {
+    return {
+      styleObj: {
+        width: '0px'
+      }
+    }
+  },
   components: {
     LayoutHeader,
     LayoutContent,
     LayoutSider
+  },
+  mounted() {
+    console.log(this.$refs.layout.offsetWidth)
+    this.styleObj = {
+      width: (this.$refs.layout.offsetWidth - 300) + 'px'
+    }
   }
 }
 </script>
