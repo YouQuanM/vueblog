@@ -3,7 +3,7 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>{{item.title}}</span>
-        <el-button style="float: right; padding: 3px 0" type="text" @click="toDetailPage(item._id)">查看详情</el-button>
+        <el-button style="float: right; padding: 3px 0" type="text" @click="toDetailPage(item.id)">查看详情</el-button>
       </div>
       <div class="index-article-content">
         <div class="ql-editor">
