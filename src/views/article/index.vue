@@ -107,14 +107,20 @@ export default {
     },
     // 添加评论
     addComment() {
+      if (this.$refs.addComment.content === '' || this.$refs.addComment.content === null) {
+        this.$message.error('评论不能为空')
+        return
+      }
       commentApis.addComment({
         articleId: this.$route.params.id,
         content: this.$refs.addComment.content,
         show: true
       }).then(res => {
         if (res.success) {
-          this.$message('评论成功')
-          this.getComment(this.$route.params.id)
+          this.$message.success('评论成功')
+          setTimeout(() => {
+            this.getComment(this.$route.params.id)
+          }, 500);
         }
       })
     },
