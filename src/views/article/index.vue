@@ -1,7 +1,14 @@
 <template>
   <div class="liangzhi-detail-page">
     <div class="liangzhi-detail">
-      <section class="detail-header">
+      <!-- loader header -->
+      <content-loader :height="50" v-if="loaderDetail">
+        <rect x="0" y="0" rx="3" ry="3" width="250" height="20" />
+        <circle cx="10" cy="36" r="10" />
+        <rect x="25" y="30" rx="3" ry="3" width="30" height="15" />
+      </content-loader>
+      <!-- header -->
+      <section class="detail-header" v-else>
         <div class="detail-title">
           <span>{{article.title}}</span>
           <el-button @click="toModifyPage" v-if="canModify">修改文章</el-button>
@@ -20,12 +27,25 @@
           </div>
         </div>
       </section>
-      <section class="detail-content ql-snow">
+      <!-- loader content -->
+      <content-loader :height="50" v-if="loaderDetail">
+        <rect x="0" y="0" rx="3" ry="3" width="380" height="6" /> 
+        <rect x="0" y="10" rx="3" ry="3" width="380" height="6" /> 
+        <rect x="0" y="20" rx="3" ry="3" width="178" height="6" /> 
+      </content-loader>
+      <!-- content -->
+      <section class="detail-content ql-snow" v-else>
         <div class="ql-editor">
           <div v-html="article.content"></div>
         </div>
       </section>
-      <section class="detail-footer">
+      <!-- loader footer -->
+      <content-loader :height="50" v-if="loaderDetail">
+        <rect x="0" y="0" rx="3" ry="3" width="20" height="10" />
+        <rect x="30" y="0" rx="3" ry="3" width="20" height="10" />
+      </content-loader>
+      <!-- footer -->
+      <section class="detail-footer" v-else>
         <div class="detail-labels">
           <el-tag v-for="(item, index) in article.labels" :key="index">{{item}}</el-tag>
         </div>
@@ -56,9 +76,10 @@ import * as commentApis from '@/apis/comment'
 import AddComment from './addcomment'
 import CommentItem from './comment'
 import { getUserInfo } from '@/common/cookie'
+import { ContentLoader } from 'vue-content-loader'
 
 export default {
-  components: { AddComment, CommentItem },
+  components: { AddComment, CommentItem, ContentLoader },
   data () {
     return {
       // 文章
@@ -79,7 +100,9 @@ export default {
       // 评论
       addCommentFlag: false,
       commentList: [],
-      canModify: false
+      canModify: false,
+      // loader
+      loaderDetail: true
     }
   },
   created() {
@@ -98,7 +121,10 @@ export default {
         time: moment(data.article.createdAt).format('MMMM DD YYYY, HH:mm:ss')
       }
       this.author = data.user
-      this.canModify = JSON.parse(getUserInfo()).id === data.article.userId
+      if (getUserInfo()) {
+        this.canModify = JSON.parse(getUserInfo()).id === data.article.userId
+      }
+      this.loaderDetail = false
     },
     // 获取评论列表
     async getComment(id) {
