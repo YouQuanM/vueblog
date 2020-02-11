@@ -1,6 +1,9 @@
 <template>
   <div class="liangzhi-layout-sider">
     <el-button type="success" icon="el-icon-edit" @click="toWrite">写文章</el-button>
+    <div class="layout-sider-ad">
+      <img src="@/assets/ad.jpeg" alt="广告位招租">
+    </div>
   </div>
 </template>
 
@@ -33,5 +36,12 @@ export default {
 <style lang="less" scoped>
 .liangzhi-layout-sider {
   padding: 12px;
+  .layout-sider-ad {
+    margin: 20px 0 0 0;
+    img {
+      width: 240px;
+      height: 300px;
+    }
+  }
 }
 </style>
