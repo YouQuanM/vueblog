@@ -92,6 +92,7 @@ export default {
     }
   },
   methods: {
+    // 提交发布
     submit() {
       if (this.title === '') {
         this.$message.error('标题不能为空！')
@@ -113,7 +114,9 @@ export default {
         // 匿名
         showAuthor: !this.showAuthor,
         // 删除默认为false
-        delete: false
+        delete: false,
+        // 简洁化，首页用
+        description: this.createDescription(this.content)
       }).then(res => {
         // 跳转详情
         if (res.success) {
@@ -123,6 +126,7 @@ export default {
         }
       })
     },
+    // 获取类别和标签
     getLabelsLabel(labels) {
       let labelsArr = []
       labels.forEach(v => {
@@ -130,6 +134,7 @@ export default {
       })
       return labelsArr
     },
+    // 获取修改文章详情
     async getModifyDetail(id) {
       const { data } = await articleApis.articleDetail({id: id})
       this.title = data.article.title
@@ -142,6 +147,7 @@ export default {
         name: data.user.name
       }
     },
+    // 提交修改
     modifyArticle() {
       this.content = this.$refs.editor.content
       articleApis.modifyArticle({
@@ -150,7 +156,8 @@ export default {
         content: this.content,
         labelsValue: this.labels,
         labelsLabel: this.getLabelsLabel(this.labels),
-        showAuthor: !this.showAuthor
+        showAuthor: !this.showAuthor,
+        description: this.createDescription(this.content)
       }).then(res => {
         // 跳转详情
         if (res.success) {
@@ -159,6 +166,15 @@ export default {
           })
         }
       })
+    },
+    // 生成description
+    createDescription(content) {
+      if (content) {
+        let reg=/<\/?.+?\/?>/g;
+        let imgreg = /<img(.*?)>/g;
+        return content.replace(imgreg,'[图片]').replace(reg, '').slice(0, 100)
+      }
+      return ''
     }
   }
 }

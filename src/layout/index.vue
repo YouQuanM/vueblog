@@ -36,7 +36,6 @@ export default {
     LayoutSider
   },
   mounted() {
-    console.log(this.$refs.layout.offsetWidth)
     this.styleObj = {
       width: (this.$refs.layout.offsetWidth - 300) + 'px'
     }
