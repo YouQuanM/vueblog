@@ -1,14 +1,27 @@
 <template>
   <div class="liangzhi-detail-page">
-    <div class="liangzhi-detail">
+    <div class="content-loader" v-if="loaderDetail">
       <!-- loader header -->
       <content-loader :height="50" v-if="loaderDetail">
         <rect x="0" y="0" rx="3" ry="3" width="250" height="20" />
         <circle cx="10" cy="36" r="10" />
         <rect x="25" y="30" rx="3" ry="3" width="30" height="15" />
       </content-loader>
+      <!-- loader content -->
+      <content-loader :height="50" v-if="loaderDetail">
+        <rect x="0" y="0" rx="3" ry="3" width="380" height="6" /> 
+        <rect x="0" y="10" rx="3" ry="3" width="380" height="6" /> 
+        <rect x="0" y="20" rx="3" ry="3" width="178" height="6" /> 
+      </content-loader>
+      <!-- loader footer -->
+      <content-loader :height="50" v-if="loaderDetail">
+        <rect x="0" y="0" rx="3" ry="3" width="20" height="10" />
+        <rect x="30" y="0" rx="3" ry="3" width="20" height="10" />
+      </content-loader>
+    </div>
+    <div class="liangzhi-detail" v-else>
       <!-- header -->
-      <section class="detail-header" v-else>
+      <section class="detail-header">
         <div class="detail-title">
           <span>{{article.title}}</span>
           <el-button @click="toModifyPage" v-if="canModify">修改文章</el-button>
@@ -27,25 +40,14 @@
           </div>
         </div>
       </section>
-      <!-- loader content -->
-      <content-loader :height="50" v-if="loaderDetail">
-        <rect x="0" y="0" rx="3" ry="3" width="380" height="6" /> 
-        <rect x="0" y="10" rx="3" ry="3" width="380" height="6" /> 
-        <rect x="0" y="20" rx="3" ry="3" width="178" height="6" /> 
-      </content-loader>
       <!-- content -->
-      <section class="detail-content ql-snow" v-else>
+      <section class="detail-content ql-snow">
         <div class="ql-editor">
           <div v-html="article.content"></div>
         </div>
       </section>
-      <!-- loader footer -->
-      <content-loader :height="50" v-if="loaderDetail">
-        <rect x="0" y="0" rx="3" ry="3" width="20" height="10" />
-        <rect x="30" y="0" rx="3" ry="3" width="20" height="10" />
-      </content-loader>
       <!-- footer -->
-      <section class="detail-footer" v-else>
+      <section class="detail-footer">
         <div class="detail-labels">
           <el-tag v-for="(item, index) in article.labels" :key="index">{{item}}</el-tag>
         </div>
