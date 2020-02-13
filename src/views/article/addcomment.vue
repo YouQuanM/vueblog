@@ -30,6 +30,7 @@ export default {
     return {
       content: null,
       editorOption: {
+        placeholder: '请输入评论...',
         modules: {
            toolbar: '#toolbar'
         }

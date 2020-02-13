@@ -49,6 +49,7 @@ export default {
     return {
       content: null,
       editorOption: {
+        placeholder: '请写...',
         modules: {
            toolbar: '#toolbar'
         }

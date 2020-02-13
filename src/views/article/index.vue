@@ -146,6 +146,7 @@ export default {
       }).then(res => {
         if (res.success) {
           this.$message.success('评论成功')
+          this.$refs.addComment.content = null
           setTimeout(() => {
             this.getComment(this.$route.params.id)
           }, 500);
