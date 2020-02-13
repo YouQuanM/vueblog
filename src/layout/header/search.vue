@@ -3,12 +3,11 @@
     <div class="search-type">
       <el-select
         v-model="type"
-        multiple
         collapse-tags
         clearable
         placeholder="类别">
         <el-option
-          v-for="item in options"
+          v-for="item in typeOptions"
           :key="item.value"
           :label="item.label"
           :value="item.value">
@@ -16,36 +15,42 @@
       </el-select>
     </div>
     <div class="search-input">
-      <el-input v-model="input" placeholder="请输入搜索内容"></el-input>
+      <el-input v-model="keyWord" placeholder="请输入搜索内容"></el-input>
     </div>
     <div class="search-button">
-      <el-button type="primary">搜索</el-button>
+      <el-button type="primary" @click="search">搜索</el-button>
     </div>
   </div>
 </template>
 
 <script>
+import * as articleApis from '@/apis/article'
+
 export default {
   data() {
     return {
-      input: '',
-      type: [],
-      options: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
-      }]
+      keyWord: null,
+      type: null,
+      typeOptions: []
+    }
+  },
+  async created() {
+    const {data} = await articleApis.getArticleTypesLabels()
+    this.typeOptions = data.types
+  },
+  methods: {
+    search() {
+      let query = {}
+      this.keyWord && (query.keyWord = this.keyWord)
+      this.type && (query.type = this.type)
+      this.$store.dispatch('search/changeSearchParams', query)
+      if (this.$route.path !== '/') {
+        this.$router.push({
+          path: '/'
+        })
+      } else {
+        this.$store.dispatch('search/searchStart')
+      }
     }
   }
 }

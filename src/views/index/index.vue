@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import IndexArticle from './components/article'
 import * as articleApis from '@/apis/article'
 export default {
@@ -27,8 +28,21 @@ export default {
     }
   },
   computed: {
+    ...mapGetters([
+      'searchFlag',
+      'searchParams'
+    ]),
     disabled () {
       return this.loading || this.noMore
+    }
+  },
+  watch: {
+    searchFlag(val) {
+      if (val === true) {
+        this.articleList = []
+        this.getArticleList()
+        this.$store.dispatch('search/searchDone')
+      }
     }
   },
   created() {
@@ -39,13 +53,18 @@ export default {
       window.addEventListener('scroll', this.scrollList)
     })
   },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.scrollList)
+  },
   methods: {
     getArticleList() {
-      articleApis.articleList({pageNum: this.pageNum}).then(res => {
+      let query = {}
+      Object.assign(query, this.searchParams, {pageNum: this.pageNum})
+      articleApis.articleList(query).then(res => {
         if (res.success) {
           this.articleList = [...this.articleList, ...res.data.list]
           this.loadFlag = false
-          if (res.data.pagination.pageTotal === this.pageNum) {
+          if (res.data.pagination.pageTotal === this.pageNum || res.data.pagination.pageTotal === 0) {
             this.loading = false
             this.noMore = true
           }
