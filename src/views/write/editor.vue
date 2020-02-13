@@ -16,14 +16,22 @@
           <option value="large"></option>
           <option value="huge"></option>
         </select>
+        <select class="ql-color">
+          <option value="black"></option>
+          <option value="red"></option>
+          <option value="blue"></option>
+          <option value="green"></option>
+        </select>
         <!-- Add subscript and superscript buttons -->
-        <span class="ql-formats"><button class="ql-script" value="sub"></button></span>
-        <span class="ql-formats"><button class="ql-script" value="super"></button></span>
+        <!-- <span class="ql-formats"><button class="ql-script" value="sub"></button></span>
+        <span class="ql-formats"><button class="ql-script" value="super"></button></span> -->
         <span class="ql-formats"><button type="button" class="ql-bold"></button></span>
         <span class="ql-formats"><button type="button" class="ql-italic"></button></span>
         <span class="ql-formats"><button type="button" class="ql-blockquote"></button></span>
+        <span class="ql-formats"><button type="button" class="ql-code-block"></button></span>
         <span class="ql-formats"><button type="button" class="ql-list" value="ordered"></button></span>
         <span class="ql-formats"><button type="button" class="ql-list" value="bullet"></button></span>
+        <span class="ql-formats"><button type="button" class="ql-clean"></button></span>
         <span class="ql-formats">
           <button type="button" @click="imgClick" style="outline:none">
           <svg viewBox="0 0 18 18"> <rect class="ql-stroke" height="10" width="12" x="3" y="4"></rect> <circle
