@@ -48,6 +48,12 @@
       </section>
       <!-- footer -->
       <section class="detail-footer">
+        <div class="like-diss-article">
+          <el-button-group>
+            <el-button type="primary" size="small" icon="el-icon-caret-top" :plain="!likesArticles.includes($route.params.id)" @click="updateLikeAndDiss('like')">{{article.likes}}</el-button>
+            <el-button type="primary" size="small" icon="el-icon-caret-bottom" :plain="!dissArticles.includes($route.params.id)" @click="updateLikeAndDiss('diss')"></el-button>
+          </el-button-group>
+        </div>
         <div class="detail-labels">
           <el-tag v-for="(item, index) in article.labels" :key="index">{{item}}</el-tag>
         </div>
@@ -75,6 +81,7 @@
 import moment from 'moment'
 import * as detailApis from '@/apis/article'
 import * as commentApis from '@/apis/comment'
+import * as userApis from '@/apis/user'
 import AddComment from './addcomment'
 import CommentItem from './comment'
 import { getUserInfo } from '@/common/cookie'
@@ -89,7 +96,9 @@ export default {
         title: '',
         content: '',
         labels: [],
-        time: ''
+        time: '',
+        type: '',
+        likes: ''
       },
       // 作者
       author: {
@@ -104,12 +113,16 @@ export default {
       commentList: [],
       canModify: false,
       // loader
-      loaderDetail: true
+      loaderDetail: true,
+      // like&dissarr
+      likesArticles: [],
+      dissArticles: []
     }
   },
   created() {
     this.getDetail(this.$route.params.id)
     this.getComment(this.$route.params.id)
+    this.getLikeDissArr()
   },
   methods: {
     // 获取文章详情
@@ -120,7 +133,8 @@ export default {
         content: data.article.content,
         labels: data.article.labelsLabel,
         type: data.article.typeLabel,
-        time: moment(data.article.createdAt).format('MMMM DD YYYY, HH:mm:ss')
+        time: moment(data.article.createdAt).format('MMMM DD YYYY, HH:mm:ss'),
+        likes: data.article.likes || 0
       }
       this.author = data.user
       if (getUserInfo()) {
@@ -156,6 +170,39 @@ export default {
     toModifyPage() {
       this.$router.push({
         path: '/write/' + this.$route.params.id
+      })
+    },
+    getLikeDissArr() {
+      userApis.getLikeDissArr().then(res => {
+        this.likesArticles = res.data.likesArticles
+        this.dissArticles = res.data.dissArticles
+      })
+    },
+    updateLikeAndDiss(type) {
+      let likeDissType = 'like'
+      switch (type) {
+        case 'diss':
+          if(this.dissArticles.includes(this.$route.params.id)) {
+            likeDissType = 'undiss'
+          } else {
+            likeDissType = 'diss'
+          }
+          break;
+        default:
+          if(this.likesArticles.includes(this.$route.params.id)) {
+            likeDissType = 'unlike'
+          } else {
+            likeDissType = 'like'
+          }
+          break;
+      }
+      detailApis.updateLikesAndDiss({
+        type: likeDissType,
+        userId: JSON.parse(getUserInfo()).id,
+        articleId: this.$route.params.id
+      }).then(res => {
+        this.getLikeDissArr()
+        this.article.likes = this.article.likes + res.data
       })
     }
   }

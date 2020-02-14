@@ -53,3 +53,12 @@ export function modifyArticle(data) {
     data: data
   })
 }
+
+// 点赞ordiss
+export function updateLikesAndDiss(data) {
+  return request({
+    url: '/updateLikeAndDiss',
+    method: 'POST',
+    data: data
+  })
+}

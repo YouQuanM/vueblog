@@ -25,3 +25,11 @@ export function getUserInfo() {
     method: 'POST'
   })
 }
+
+// 获取likedissarticles
+export function getLikeDissArr() {
+  return request({
+    url: '/getLikeAndDiss',
+    method: 'POST'
+  })
+}
