@@ -84,7 +84,7 @@ import * as commentApis from '@/apis/comment'
 import * as userApis from '@/apis/user'
 import AddComment from './addcomment'
 import CommentItem from './comment'
-import { getUserInfo } from '@/common/cookie'
+import { getUserInfo, getToken } from '@/common/cookie'
 import { ContentLoader } from 'vue-content-loader'
 
 export default {
@@ -179,6 +179,17 @@ export default {
       })
     },
     updateLikeAndDiss(type) {
+      if (!getToken()) {
+        // 请先登录
+        this.$alert('请先登录', '未登录', {
+          confirmButtonText: '确定',
+          type: 'warning',
+          callback: action => {
+            this.$store.dispatch('user/toLogin', true)
+          }
+        })
+        return
+      }
       let likeDissType = 'like'
       switch (type) {
         case 'diss':
