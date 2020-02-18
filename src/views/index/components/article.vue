@@ -34,7 +34,10 @@ export default {
   methods: {
     toDetailPage(id) {
       this.$router.push({
-        path: 'article/' + id + '/detail'
+        path: 'article',
+        query: {
+          id: id
+        }
       })
     },
     disposeTime (time) {

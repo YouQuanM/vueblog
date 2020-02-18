@@ -55,7 +55,7 @@ export default {};
     //   box-shadow: 10px 10px 15px mix(@border-color, #fff, 40%) inset;
     // }
     &:active {
-      box-shadow: 16px 16px 20px mix(@border-color, #fff, 80%) inset;
+      box-shadow: 10px 10px 20px mix(@border-color, #fff, 80%) inset;
     }
   }
   

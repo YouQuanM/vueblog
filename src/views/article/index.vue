@@ -50,8 +50,8 @@
       <section class="detail-footer">
         <div class="like-diss-article">
           <el-button-group>
-            <el-button type="primary" size="small" icon="el-icon-caret-top" :plain="!likesArticles.includes($route.params.id)" @click="updateLikeAndDiss('like')">{{article.likes}}</el-button>
-            <el-button type="primary" size="small" icon="el-icon-caret-bottom" :plain="!dissArticles.includes($route.params.id)" @click="updateLikeAndDiss('diss')"></el-button>
+            <el-button type="primary" size="small" icon="el-icon-caret-top" :plain="!likesArticles.includes($route.query.id)" @click="updateLikeAndDiss('like')">{{article.likes}}</el-button>
+            <el-button type="primary" size="small" icon="el-icon-caret-bottom" :plain="!dissArticles.includes($route.query.id)" @click="updateLikeAndDiss('diss')"></el-button>
           </el-button-group>
         </div>
         <div class="detail-labels">
@@ -120,8 +120,8 @@ export default {
     }
   },
   created() {
-    this.getDetail(this.$route.params.id)
-    this.getComment(this.$route.params.id)
+    this.getDetail(this.$route.query.id)
+    this.getComment(this.$route.query.id)
     this.getLikeDissArr()
   },
   methods: {
@@ -154,7 +154,7 @@ export default {
         return
       }
       commentApis.addComment({
-        articleId: this.$route.params.id,
+        articleId: this.$route.query.id,
         content: this.$refs.addComment.content,
         show: true
       }).then(res => {
@@ -162,14 +162,14 @@ export default {
           this.$message.success('评论成功')
           this.$refs.addComment.content = null
           setTimeout(() => {
-            this.getComment(this.$route.params.id)
+            this.getComment(this.$route.query.id)
           }, 500);
         }
       })
     },
     toModifyPage() {
       this.$router.push({
-        path: '/write/' + this.$route.params.id
+        path: '/write/' + this.$route.query.id
       })
     },
     getLikeDissArr() {
@@ -193,14 +193,14 @@ export default {
       let likeDissType = 'like'
       switch (type) {
         case 'diss':
-          if(this.dissArticles.includes(this.$route.params.id)) {
+          if(this.dissArticles.includes(this.$route.query.id)) {
             likeDissType = 'undiss'
           } else {
             likeDissType = 'diss'
           }
           break;
         default:
-          if(this.likesArticles.includes(this.$route.params.id)) {
+          if(this.likesArticles.includes(this.$route.query.id)) {
             likeDissType = 'unlike'
           } else {
             likeDissType = 'like'
@@ -210,7 +210,7 @@ export default {
       detailApis.updateLikesAndDiss({
         type: likeDissType,
         userId: JSON.parse(getUserInfo()).id,
-        articleId: this.$route.params.id
+        articleId: this.$route.query.id
       }).then(res => {
         this.getLikeDissArr()
         this.article.likes = this.article.likes + res.data

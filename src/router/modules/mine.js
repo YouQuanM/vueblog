@@ -6,11 +6,11 @@ const routes = [
     component: Layout,
     children: [
       {
-        path: '/article',
-        name: 'Detail',
-        component: () => import('@/views/article/index.vue'),
+        path: '/mine',
+        name: 'minePage',
+        component: () => import('@/views/mine/index.vue'),
         meta: {
-          title: '文章详情'
+          title: '我的'
         }
       }
     ]

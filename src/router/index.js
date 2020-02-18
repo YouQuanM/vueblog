@@ -4,6 +4,8 @@ import Index from '../views/index/index.vue'
 import Layout from '../layout'
 import articleRoutes from './modules/article'
 import writeRoutes from './modules/write'
+import Test from '../views/test.vue'
+import mineRoutes from './modules/mine'
 
 Vue.use(VueRouter)
 
@@ -21,7 +23,20 @@ const routes = [
     ]
   },
   ...articleRoutes,
-  ...writeRoutes
+  ...writeRoutes,
+  ...mineRoutes,
+  {
+    path: '',
+    component: Layout,
+    redirect: '',
+    children: [
+      {
+        path: '/test',
+        name: 'Text',
+        component: Test
+      }
+    ]
+  },
 ]
 
 const router = new VueRouter({

@@ -111,7 +111,9 @@ export default {
       if (command === 'logout') {
         this.logout()
       } else {
-
+        this.$router.push({
+          path: 'mine'
+        })
       }
     },
     logout() {

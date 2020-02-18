@@ -33,3 +33,12 @@ export function getLikeDissArr() {
     method: 'POST'
   })
 }
+
+// 获取用户logs
+export function getUserLogs(data) {
+  return request({
+    url: '/getUserLogs',
+    method: 'POST',
+    data: data
+  })
+}
