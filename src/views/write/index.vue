@@ -85,10 +85,10 @@ export default {
     this.typeOptions = data.types
     this.labelOptions = data.labels
     // 修改
-    if (this.$route.params.id) {
+    if (this.$route.query.id) {
       this.modifyFlag = true
       this.submitText = '修改'
-      this.getModifyDetail(this.$route.params.id)
+      this.getModifyDetail(this.$route.query.id)
     }
   },
   methods: {
@@ -120,8 +120,11 @@ export default {
       }).then(res => {
         // 跳转详情
         if (res.success) {
-          this.$router.push({
-            path: '/article/' + res.data.articleId + '/detail'
+          this.$router.replace({
+            path: 'article',
+            query: {
+              id: res.data.articleId
+            }
           })
         }
       })
@@ -151,7 +154,7 @@ export default {
     modifyArticle() {
       this.content = this.$refs.editor.content
       articleApis.modifyArticle({
-        articleId: this.$route.params.id,
+        articleId: this.$route.query.id,
         userId: this.author.id,
         content: this.content,
         labelsValue: this.labels,
@@ -162,7 +165,10 @@ export default {
         // 跳转详情
         if (res.success) {
           this.$router.replace({
-            path: '/article/' + this.$route.params.id + '/detail'
+            path: 'article',
+            query: {
+              id: this.$route.query.id
+            }
           })
         }
       })

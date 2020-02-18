@@ -169,7 +169,10 @@ export default {
     },
     toModifyPage() {
       this.$router.push({
-        path: '/write/' + this.$route.query.id
+        path: '/write',
+        query: {
+          id: this.$route.query.id
+        }
       })
     },
     getLikeDissArr() {
