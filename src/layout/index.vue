@@ -14,6 +14,9 @@
       <section class="layout-sider">
         <layout-sider></layout-sider>
       </section>
+      <div class="layout-footer" :style="footerWidth">
+        <layout-footer></layout-footer>
+      </div>
     </div>
   </div>
 </template>
@@ -22,6 +25,7 @@
 import LayoutHeader from './header/index'
 import LayoutContent from './content/index'
 import LayoutSider from './sider/index'
+import LayoutFooter from './footer/index'
 export default {
   data() {
     return {
@@ -33,11 +37,15 @@ export default {
   components: {
     LayoutHeader,
     LayoutContent,
-    LayoutSider
+    LayoutSider,
+    LayoutFooter
   },
   mounted() {
     this.styleObj = {
       width: (this.$refs.layout.offsetWidth - 300) + 'px'
+    }
+    this.footerWidth = {
+      width: (this.$refs.layout.offsetWidth) + 'px'
     }
   }
 }
@@ -59,6 +67,14 @@ export default {
     .layout-sider {
       width: 300px;
     }
+    .layout-footer {
+      width: 100%;
+      padding: 10px 0;
+      position: fixed;
+      bottom: 0;
+      border-top: 1px solid #dcdfe6;
+    }
   }
+  
 }
 </style>
